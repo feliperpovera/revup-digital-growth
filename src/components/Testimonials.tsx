@@ -32,6 +32,15 @@ const testimonials = [
   },
   {
     type: "result",
+    company: "Vera",
+    subtitle: "E-commerce · Colombia",
+    description: "We Helped Them Grow Sales In Colombia With A Return On Ad Spend Of",
+    result: "4.0x",
+    period: "ROAS",
+    logo: veraLogo,
+  },
+  {
+    type: "result",
     company: "MIAN",
     subtitle: "E-commerce",
     description: "We Achieved A Return On Ad Spend Of",
