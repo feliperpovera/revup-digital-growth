@@ -9,6 +9,7 @@ import hostuLogo from "@/assets/clients/hostu-logo.jpeg";
 import europeanLogo from "@/assets/clients/european-logo.png";
 import velezLogo from "@/assets/clients/velez-logo.png";
 import intrawestLogo from "@/assets/clients/intrawest-logo.png";
+import veraLogo from "@/assets/clients/vera-logo.png";
 
 const testimonials = [
   {
@@ -28,6 +29,15 @@ const testimonials = [
     result: "Full",
     period: "Support",
     logo: intrawestLogo,
+  },
+  {
+    type: "result",
+    company: "Vera",
+    subtitle: "E-commerce · Colombia",
+    description: "We Helped Them Grow Sales In Colombia With A Return On Ad Spend Of",
+    result: "4.0x",
+    period: "ROAS",
+    logo: veraLogo,
   },
   {
     type: "result",
