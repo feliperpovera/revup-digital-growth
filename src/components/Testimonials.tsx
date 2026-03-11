@@ -16,7 +16,7 @@ const testimonials = [
     type: "result",
     company: "Vera",
     subtitle: "E-commerce · Colombia",
-    description: "We Helped Them Grow Sales In Colombia With A Return On Ad Spend Of",
+    description: "We collaborate with driven brands and entrepreneurs who are ready to scale. With every partnership, our goal is the same: build and optimize a high-performing sales funnel that turns traffic into leads and leads into revenue.",
     result: "4.0x",
     period: "ROAS",
     logo: veraLogo,
