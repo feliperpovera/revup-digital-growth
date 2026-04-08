@@ -10,6 +10,7 @@ import europeanLogo from "@/assets/clients/european-logo.png";
 import velezLogo from "@/assets/clients/velez-logo.png";
 import intrawestLogo from "@/assets/clients/intrawest-logo.png";
 import veraLogo from "@/assets/clients/vera-logo.png";
+import monasteryLogo from "@/assets/clients/monastery-logo.png";
 
 const testimonials = [
   {
