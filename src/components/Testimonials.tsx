@@ -10,6 +10,7 @@ import europeanLogo from "@/assets/clients/european-logo.png";
 import velezLogo from "@/assets/clients/velez-logo.png";
 import intrawestLogo from "@/assets/clients/intrawest-logo.png";
 import veraLogo from "@/assets/clients/vera-logo.png";
+import monasteryLogo from "@/assets/clients/monastery-logo.png";
 
 const testimonials = [
   {
@@ -47,6 +48,15 @@ const testimonials = [
     result: "Full",
     period: "Support",
     logo: velezLogo,
+  },
+  {
+    type: "result",
+    company: "Monastery Couture",
+    subtitle: "Retail & Fashion",
+    description: "We Supported Them Through The Entire Advertising Process In The USA",
+    result: "Full",
+    period: "Support",
+    logo: monasteryLogo,
   },
   {
     type: "result",
