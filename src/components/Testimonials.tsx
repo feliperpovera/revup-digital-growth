@@ -15,15 +15,6 @@ import monasteryLogo from "@/assets/clients/monastery-logo.png";
 const testimonials = [
   {
     type: "result",
-    company: "Vera",
-    subtitle: "E-commerce · Colombia",
-    description: "We collaborate with driven brands and entrepreneurs who are ready to scale. With every partnership, our goal is the same: build and optimize a high-performing sales funnel that turns traffic into leads and leads into revenue.",
-    result: "4.0x",
-    period: "ROAS",
-    logo: veraLogo,
-  },
-  {
-    type: "result",
     company: "Vélez",
     subtitle: "Retail & Fashion",
     description: "We Supported Them Through The Entire Advertising Process In The USA",
@@ -57,6 +48,15 @@ const testimonials = [
     result: "7.4x",
     period: "ROAS",
     logo: newlifeLogo,
+  },
+  {
+    type: "result",
+    company: "Vera",
+    subtitle: "E-commerce · Colombia",
+    description: "We collaborate with driven brands and entrepreneurs who are ready to scale. With every partnership, our goal is the same: build and optimize a high-performing sales funnel that turns traffic into leads and leads into revenue.",
+    result: "4.0x",
+    period: "ROAS",
+    logo: veraLogo,
   },
   {
     type: "result",
