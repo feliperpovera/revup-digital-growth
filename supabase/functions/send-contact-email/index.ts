@@ -42,6 +42,10 @@ const escapeHtml = (text: string): string => {
 // Rate limiting function using Deno KV
 const checkRateLimit = async (identifier: string): Promise<{ allowed: boolean; retryAfter?: number }> => {
   try {
+    if (typeof Deno.openKv !== "function") {
+      return { allowed: true };
+    }
+
     const kv = await Deno.openKv();
     const key = ['rate_limit', 'contact_form', identifier];
     const result = await kv.get<{ count: number; resetAt: number }>(key);

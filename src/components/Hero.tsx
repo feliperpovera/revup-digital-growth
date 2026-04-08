@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { CalendarDays, Send } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Hero = () => {
+  const CALENDLY_URL = "https://calendly.com/revupagencygroup-info/30min?month=2025-11";
   const [displayedText1, setDisplayedText1] = useState("");
   const [displayedText2, setDisplayedText2] = useState("");
   const [showSubtitle, setShowSubtitle] = useState(false);
@@ -147,6 +148,17 @@ export const Hero = () => {
               <p className="text-lg sm:text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-xl mx-auto lg:mx-0">
                 Boost revenue, reduce workload, and scale faster & smarter with data and AI — let us show you how.
               </p>
+            </div>
+
+            <div className={`lg:hidden mb-8 transition-all duration-700 ${showButton ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <Button
+                type="button"
+                className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12 px-6"
+                onClick={() => window.open(CALENDLY_URL, "_blank", "noopener,noreferrer")}
+              >
+                Schedule a Meeting
+                <CalendarDays className="ml-2 w-4 h-4" />
+              </Button>
             </div>
 
           </div>

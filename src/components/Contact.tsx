@@ -37,7 +37,7 @@ export const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.functions.invoke('send-contact-email', {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: {
           name: formData.name.trim(),
           email: formData.email.trim(),
@@ -49,7 +49,11 @@ export const Contact = () => {
 
       if (error) throw error;
 
-      toast.success("Message sent! We'll get back to you soon.");
+      if (data?.sandbox_mode) {
+        toast.success("Message received. Email notifications are currently in test mode.");
+      } else {
+        toast.success("Message sent! We'll get back to you soon.");
+      }
       setFormData({ name: "", email: "", phone: "", company: "", message: "" });
     } catch (error) {
       console.error("Error sending message:", error);
