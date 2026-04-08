@@ -302,7 +302,9 @@ export const OnboardingForm = () => {
       setIsSubmitted(true);
       toast({
         title: "Form submitted!",
-        description: "We have received your information successfully.",
+        description: data?.sandbox_mode
+          ? "We received your information, but email notifications are still in test mode."
+          : "We have received your information successfully.",
       });
     } catch (error: any) {
       console.error("Error submitting form:", error);

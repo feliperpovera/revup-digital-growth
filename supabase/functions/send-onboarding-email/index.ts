@@ -5,7 +5,7 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // Rate limiting constants
@@ -23,6 +23,8 @@ const ALLOWED_MIME_TYPES = [
 ];
 
 // Validation schema
+const choiceSchema = z.enum(['yes', 'no', 'si', '']);
+
 const fileSchema = z.object({
   name: z.string().max(255),
   content: z.string().max(MAX_FILE_SIZE_BYTES * 1.4), // base64 is ~1.37x larger
@@ -32,7 +34,7 @@ const fileSchema = z.object({
 }).nullable().optional();
 
 const formSchema = z.object({
-  hasStrategy: z.enum(['si', 'no', '']),
+  hasStrategy: choiceSchema,
   strategyDetails: z.string().max(MAX_TEXT_LENGTH).default(''),
   googlePercentage: z.string().refine(v => !v || (parseFloat(v) >= 0 && parseFloat(v) <= 100), {
     message: "Porcentaje inválido"
@@ -43,9 +45,9 @@ const formSchema = z.object({
   activeSKUs: z.string().refine(v => !v || parseInt(v) >= 0, {
     message: "Número de SKUs inválido"
   }),
-  focusOnCategories: z.enum(['si', 'no', '']),
+  focusOnCategories: choiceSchema,
   categoriesDetails: z.string().max(MAX_TEXT_LENGTH).default(''),
-  hasDriveFolder: z.enum(['si', 'no', '']),
+  hasDriveFolder: choiceSchema,
   driveFolderLink: z.string().max(500).default(''),
   additionalInfo: z.string().max(MAX_TEXT_LENGTH).default(''),
   shopifyReport: fileSchema,
@@ -83,9 +85,15 @@ const sanitizeUrl = (url: string): string => {
   }
 };
 
+const isAffirmativeChoice = (value: z.infer<typeof choiceSchema>): boolean => value === 'yes' || value === 'si';
+
 // Rate limiting function using Deno KV
 const checkRateLimit = async (identifier: string): Promise<{ allowed: boolean; retryAfter?: number }> => {
   try {
+    if (typeof Deno.openKv !== "function") {
+      return { allowed: true };
+    }
+
     const kv = await Deno.openKv();
     const key = ['rate_limit', 'onboarding_form', identifier];
     const result = await kv.get<{ count: number; resetAt: number }>(key);
@@ -122,6 +130,31 @@ const checkRateLimit = async (identifier: string): Promise<{ allowed: boolean; r
     console.error("Rate limiting error:", error);
     return { allowed: true };
   }
+};
+
+const RESEND_TEST_RECIPIENT = "feliperesvera106@gmail.com";
+const ONBOARDING_NOTIFICATION_RECIPIENT = "info@revupagencygroup.com";
+
+const sendEmail = async (payload: Record<string, unknown>) => {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Resend API error: ${error}`);
+  }
+
+  return await response.json();
+};
+
+const isResendSandboxRestriction = (error: unknown) => {
+  return error instanceof Error && error.message.includes("You can only send testing emails to your own email address");
 };
 
 const handler = async (req: Request): Promise<Response> => {
@@ -250,7 +283,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             <div class="field">
               <span class="label">¿Tiene estrategia definida?:</span>
-              <span class="value highlight">${data.hasStrategy === 'si' ? 'Sí' : 'No'}</span>
+               <span class="value highlight">${isAffirmativeChoice(data.hasStrategy) ? 'Yes' : 'No'}</span>
             </div>
             ${data.strategyDetails ? `
             <div class="field">
@@ -272,7 +305,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             <div class="field">
               <span class="label">¿Enfoque en categorías específicas?:</span>
-              <span class="value highlight">${data.focusOnCategories === 'si' ? 'Sí' : 'No'}</span>
+               <span class="value highlight">${isAffirmativeChoice(data.focusOnCategories) ? 'Yes' : 'No'}</span>
             </div>
             ${data.categoriesDetails ? `
             <div class="field">
@@ -286,7 +319,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="section">
             <div class="field">
               <span class="label">¿Tiene carpeta Drive/Dropbox?:</span>
-              <span class="value highlight">${data.hasDriveFolder === 'si' ? 'Sí' : 'No'}</span>
+               <span class="value highlight">${isAffirmativeChoice(data.hasDriveFolder) ? 'Yes' : 'No'}</span>
             </div>
             ${sanitizedDriveLink ? `
             <div class="field">
@@ -316,7 +349,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Build email payload
     const emailPayload: Record<string, unknown> = {
       from: "RevUp Onboarding <onboarding@resend.dev>",
-      to: ["feliperesvera106@gmail.com"], // Cambiar después de verificar dominio
+      to: [ONBOARDING_NOTIFICATION_RECIPIENT],
       subject: `🚀 Nuevo Onboarding - ${new Date().toLocaleDateString('es-ES')}`,
       html: emailHtml,
     };
@@ -325,28 +358,35 @@ const handler = async (req: Request): Promise<Response> => {
       emailPayload.attachments = attachments;
     }
 
-    console.log("Sending email with", attachments.length, "attachments");
+    console.log("Sending onboarding email with", attachments.length, "attachments");
 
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(emailPayload),
-    });
+    let sandboxMode = false;
+    let result: { id: string };
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error("Resend API error:", error);
-      throw new Error(`Error sending email: ${error}`);
+    try {
+      result = await sendEmail(emailPayload);
+    } catch (error) {
+      if (!isResendSandboxRestriction(error)) {
+        throw error;
+      }
+
+      sandboxMode = true;
+      console.warn("Resend sandbox restriction detected. Using onboarding fallback recipient.");
+      result = await sendEmail({
+        ...emailPayload,
+        to: [RESEND_TEST_RECIPIENT],
+      });
     }
 
-    const result = await response.json();
     console.log("Email sent successfully:", result);
 
     return new Response(
-      JSON.stringify({ success: true, emailId: result.id }),
+      JSON.stringify({
+        success: true,
+        emailId: result.id,
+        sandbox_mode: sandboxMode,
+        notificationDeliveredTo: sandboxMode ? RESEND_TEST_RECIPIENT : ONBOARDING_NOTIFICATION_RECIPIENT,
+      }),
       {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
