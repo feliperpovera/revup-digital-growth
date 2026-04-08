@@ -51,6 +51,15 @@ const testimonials = [
   },
   {
     type: "result",
+    company: "Monastery Couture",
+    subtitle: "Retail & Fashion",
+    description: "We Supported Them Through The Entire Advertising Process In The USA",
+    result: "Full",
+    period: "Support",
+    logo: monasteryLogo,
+  },
+  {
+    type: "result",
     company: "IntraWest Management",
     subtitle: "Real Estate",
     description: "We Supported Them Through The Entire Advertising Process In The USA",
