@@ -178,9 +178,6 @@ export const Testimonials = () => {
                   {item.result}
                 </div>
                 <p className="text-xs text-foreground/40">{item.period}</p>
-                {item.highlight && (
-                  <p className="mt-2 text-xs font-semibold text-accent leading-snug">{item.highlight}</p>
-                )}
               </div>
             </article>
           ))}
