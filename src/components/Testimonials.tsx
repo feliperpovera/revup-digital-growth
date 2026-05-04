@@ -12,30 +12,34 @@ import intrawestLogo from "@/assets/clients/intrawest-logo.png";
 import veraLogo from "@/assets/clients/vera-logo.png";
 import monasteryLogo from "@/assets/clients/monastery-logo.png";
 
+const PARTNER_DESCRIPTION = "We partner with brands and entrepreneurs ready to grow in the U.S. market through high-performance paid advertising strategies. From campaign planning and audience targeting to optimization and scaling, we help businesses turn ad spend into measurable growth.";
+
 const testimonials = [
   {
     type: "result",
     company: "Vélez",
     subtitle: "Retail & Fashion",
-    description: "We Supported Them Through The Entire Advertising Process In The USA",
+    description: PARTNER_DESCRIPTION,
     result: "Full",
     period: "Support",
+    highlight: "+216% sales growth vs. same month last year",
     logo: velezLogo,
   },
   {
     type: "result",
     company: "Monastery Couture",
     subtitle: "Retail & Fashion",
-    description: "We Supported Them Through The Entire Advertising Process In The USA",
+    description: PARTNER_DESCRIPTION,
     result: "Full",
     period: "Support",
+    highlight: "+40% sales growth vs. same month last year",
     logo: monasteryLogo,
   },
   {
     type: "result",
     company: "MIAN",
     subtitle: "E-commerce",
-    description: "We Achieved A Return On Ad Spend Of",
+    description: PARTNER_DESCRIPTION,
     result: "20.2x",
     period: "ROAS",
     logo: mianLogo,
@@ -44,7 +48,7 @@ const testimonials = [
     type: "result",
     company: "New Life Furniture",
     subtitle: "Home & Living",
-    description: "We Achieved A Return On Ad Spend Of",
+    description: PARTNER_DESCRIPTION,
     result: "7.4x",
     period: "ROAS",
     logo: newlifeLogo,
@@ -53,7 +57,7 @@ const testimonials = [
     type: "result",
     company: "Vera",
     subtitle: "E-commerce · Colombia",
-    description: "We collaborate with driven brands and entrepreneurs who are ready to scale. With every partnership, our goal is the same: build and optimize a high-performing sales funnel that turns traffic into leads and leads into revenue.",
+    description: PARTNER_DESCRIPTION,
     result: "4.0x",
     period: "ROAS",
     logo: veraLogo,
@@ -62,7 +66,7 @@ const testimonials = [
     type: "result",
     company: "IntraWest Management",
     subtitle: "Real Estate",
-    description: "We Supported Them Through The Entire Advertising Process In The USA",
+    description: PARTNER_DESCRIPTION,
     result: "Full",
     period: "Support",
     logo: intrawestLogo,
@@ -71,7 +75,7 @@ const testimonials = [
     type: "result",
     company: "Host U",
     subtitle: "Web Development",
-    description: "We Created A Complete Web Presence",
+    description: PARTNER_DESCRIPTION,
     result: "Website",
     period: "Creation",
     logo: hostuLogo,
@@ -80,7 +84,7 @@ const testimonials = [
     type: "result",
     company: "European Luxury Wall Finishes",
     subtitle: "Web Development",
-    description: "We Created A Complete Web Presence",
+    description: PARTNER_DESCRIPTION,
     result: "Website",
     period: "Creation",
     logo: europeanLogo,
@@ -176,6 +180,9 @@ export const Testimonials = () => {
                   {item.result}
                 </div>
                 <p className="text-xs text-foreground/40">{item.period}</p>
+                {item.highlight && (
+                  <p className="mt-2 text-xs font-semibold text-accent leading-snug">{item.highlight}</p>
+                )}
               </div>
             </article>
           ))}
