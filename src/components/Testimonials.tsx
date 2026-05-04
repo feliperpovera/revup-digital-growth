@@ -12,7 +12,7 @@ import intrawestLogo from "@/assets/clients/intrawest-logo.png";
 import veraLogo from "@/assets/clients/vera-logo.png";
 import monasteryLogo from "@/assets/clients/monastery-logo.png";
 
-const PARTNER_DESCRIPTION = "We partner with brands and entrepreneurs ready to grow in the U.S. market through high-performance paid advertising strategies. From campaign planning and audience targeting to optimization and scaling, we help businesses turn ad spend into measurable growth.";
+const PARTNER_DESCRIPTION = "We help brands grow in the U.S. with high-performance paid advertising — from strategy to scaling.";
 
 const testimonials = [
   {
@@ -20,9 +20,8 @@ const testimonials = [
     company: "Vélez",
     subtitle: "Retail & Fashion",
     description: PARTNER_DESCRIPTION,
-    result: "Full",
-    period: "Support",
-    highlight: "+216% sales growth vs. same month last year",
+    result: "+216%",
+    period: "Sales vs. same month last year",
     logo: velezLogo,
   },
   {
@@ -30,9 +29,8 @@ const testimonials = [
     company: "Monastery Couture",
     subtitle: "Retail & Fashion",
     description: PARTNER_DESCRIPTION,
-    result: "Full",
-    period: "Support",
-    highlight: "+40% sales growth vs. same month last year",
+    result: "+40%",
+    period: "Sales vs. same month last year",
     logo: monasteryLogo,
   },
   {
@@ -180,9 +178,6 @@ export const Testimonials = () => {
                   {item.result}
                 </div>
                 <p className="text-xs text-foreground/40">{item.period}</p>
-                {item.highlight && (
-                  <p className="mt-2 text-xs font-semibold text-accent leading-snug">{item.highlight}</p>
-                )}
               </div>
             </article>
           ))}
